@@ -1,10 +1,11 @@
 import { atom, read, update } from 'claude-code'
 import type { Register } from 'claude-code'
 
-import type { AgentRow, ContextLevel } from '../types'
+import type { AgentRow, ContextLevel, PromptLocation } from '../types'
 
 const BRANCH = atom({ plugin: 'prompt-band', key: 'branch' } as const, null as string | null)
 const CONTEXT = atom({ plugin: 'prompt-band', key: 'context' } as const, null as ContextLevel | null)
+const LOCATION = atom({ plugin: 'prompt-band', key: 'location' } as const, null as PromptLocation | null)
 const AGENTS = atom({ plugin: 'prompt-band', key: 'agents' } as const, [] as AgentRow[])
 const FRAME = atom({ plugin: 'prompt-band', key: 'frame' } as const, 0)
 
@@ -12,8 +13,10 @@ const TICK_MS = 500
 const CONTEXT_EVERY_TICKS = 10
 const BAR_WIDTH = 24
 const LABEL_WIDTH = 24
+const RULE_WIDTH = 48
 const MAX_AGENTS = 3
 const ACTIVE = ['pending', 'running', 'waiting']
+const MAIN_BRANCHES = ['main', 'master']
 
 // The part of the engine interface this mod calls, beside its state.
 type Engine = Parameters<typeof update>[0] & {
@@ -30,6 +33,19 @@ const refreshBranch = async ($: Engine) => {
   const { exitCode, stdout } = await $.process.run(['git', 'rev-parse', '--abbrev-ref', 'HEAD'])
   const branch = exitCode === 0 ? stdout.trim() : null
   await update($, BRANCH, () => branch)
+}
+
+// User, host and home come from one shell call; the working directory comes from the session.
+const refreshLocation = async ($: Engine, cwd: string) => {
+  const { exitCode, stdout } = await $.process.run([
+    'sh',
+    '-c',
+    'printf "%s|%s|%s" "$(whoami)" "$(hostname)" "$HOME"',
+  ])
+  if (exitCode !== 0) return
+  const [user, host, home] = stdout.split('|')
+  const shown = home && cwd.startsWith(home) ? `~${cwd.slice(home.length)}` : cwd
+  await update($, LOCATION, () => ({ user, host, cwd: shown }))
 }
 
 const refreshContext = async ($: Engine) => {
@@ -59,12 +75,15 @@ const refreshAgents = async ($: Engine) => {
 const contextColor = (percent: number | null) =>
   percent === null ? 'subtle' : percent >= 85 ? 'error' : percent >= 60 ? 'warning' : 'success'
 
+// Main branches stand out in yellow, so an accidental commit on main is easy to spot.
+const branchColor = (branch: string) => (MAIN_BRANCHES.includes(branch) ? 'warning' : 'success')
+
 const formatTokens = (n: number) => `${Math.round(n / 1000)}k`
 
 const contextText = (context: ContextLevel) =>
   context.percent === null
-    ? `context: window ${formatTokens(context.window)}`
-    : `context: ${context.percent}% (${formatTokens(context.tokens ?? 0)} / ${formatTokens(context.window)})`
+    ? `🧠 window ${formatTokens(context.window)}`
+    : `🧠 ${context.percent}% (${formatTokens(context.tokens ?? 0)} / ${formatTokens(context.window)})`
 
 // A block that moves along the bar, one cell per frame, while the agent works.
 const workingCells = (frame: number) => {
@@ -85,6 +104,7 @@ export const register: Register = on => {
   on('session.start', async ($, e, next) => {
     const started = await next(e)
 
+    await refreshLocation($, e.cwd)
     await refreshBranch($)
     await refreshContext($)
     await refreshAgents($)
@@ -119,24 +139,16 @@ export const register: Register = on => {
   on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
     const branch = await read($, BRANCH)
     const context = await read($, CONTEXT)
+    const location = await read($, LOCATION)
     const agents = await read($, AGENTS)
     const frame = await read($, FRAME)
 
-    if (branch === null && context === null && agents.length === 0) return next(e)
+    if (branch === null && context === null && location === null && agents.length === 0) return next(e)
 
     const { Box, Text } = $.ui.resolve(e)
 
     return (
       <Box flexDirection="column">
-        {branch !== null || context !== null ? (
-          <Box>
-            {branch !== null ? <Text>{`branch: ${branch}`}</Text> : null}
-            {branch !== null && context !== null ? <Text>{'   '}</Text> : null}
-            {context !== null ? (
-              <Text color={contextColor(context.percent)}>{contextText(context)}</Text>
-            ) : null}
-          </Box>
-        ) : null}
         {agents.map(row => {
           const bar = agentBar(row, frame)
           return (
@@ -146,6 +158,22 @@ export const register: Register = on => {
             </Box>
           )
         })}
+        <Text color="subtle">{'─'.repeat(RULE_WIDTH)}</Text>
+        <Box>
+          {location !== null ? (
+            <Text color="success">{`${location.user}@${location.host}`}</Text>
+          ) : null}
+          {location !== null ? <Text>{':'}</Text> : null}
+          {location !== null ? <Text color="subtle">{location.cwd}</Text> : null}
+          {branch !== null ? <Text>{'  '}</Text> : null}
+          {branch !== null ? (
+            <Text color={branchColor(branch)}>{`🌿 ${branch}`}</Text>
+          ) : null}
+          {branch !== null && context !== null ? <Text>{' - '}</Text> : null}
+          {context !== null ? (
+            <Text color={contextColor(context.percent)}>{contextText(context)}</Text>
+          ) : null}
+        </Box>
       </Box>
     )
   })

@@ -6,7 +6,13 @@ const stubEngine = (on: On, agents: { id: string; type: string; description: str
   mock.clock(on)
   on('session.start', ($, e) => ({ cwd: e.cwd }))
   on('process.run', ($, e) => ({
-    value: { exitCode: 0, stdout: 'feature/demo\n', stderr: '', isStdoutTruncated: false, isStderrTruncated: false },
+    value: {
+      exitCode: 0,
+      stdout: e.argv[0] === 'git' ? 'feature/demo\n' : 'yekuuun|yekuuun-laptop|/home/yekuuun',
+      stderr: '',
+      isStdoutTruncated: false,
+      isStderrTruncated: false,
+    },
   }))
   on('session.usage', ($, e) => ({
     value: { startedAt: 0, rateLimits: [], context: { tokens: 84000, window: 200000, percent: 42 } },
@@ -35,7 +41,8 @@ test('draws the branch above the prompt', async ($, on) => {
   await $.session.start({ cwd: '.', surface: 'terminal', isInteractive: true })
 
   const ui = await $.ui.mount({ plugin: 'prompt-band', surface: 'terminal', component: 'AbovePrompt', props: { hasSurvey: false, isWorking: false, maxRows: 10, bodyColumns: 80, scroll: { offset: 0, bodyRows: 10 }, view: {} } })
-  expect(await ui.find({ type: 'Text', text: /branch: feature\/demo/ })).toBeDefined()
+  expect(await ui.find({ type: 'Text', text: /feature\/demo/ })).toBeDefined()
+  expect(await ui.find({ type: 'Text', text: /yekuuun@yekuuun-laptop/ })).toBeDefined()
   await ui.unmount()
 })
 

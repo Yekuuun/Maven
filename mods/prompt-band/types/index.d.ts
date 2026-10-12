@@ -12,11 +12,18 @@ export type AgentRow = {
   status: string
 }
 
+export type PromptLocation = {
+  user: string
+  host: string
+  cwd: string
+}
+
 declare module 'claude-code' {
   interface PluginState {
     'prompt-band': {
       branch: string | null
       context: ContextLevel | null
+      location: PromptLocation | null
       agents: AgentRow[]
       frame: number
     }

@@ -1,6 +1,6 @@
 {
   "name": "prompt-band",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Shows the git branch, the context window and running agents above the prompt.",
   "author": { "name": "Yekuuun" },
   "types": "./types/index.d.ts"
