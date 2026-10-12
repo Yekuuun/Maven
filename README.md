@@ -38,4 +38,8 @@ Then install what a project needs:
 - **Domain plugins** (`ebpf`) build on a language and only add what is specific to the
   domain. A C memory rule lives in `c`, never copied into `ebpf`.
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for how plugins are structured and versioned.
+## Documentation
+
+- [docs/](docs/README.md): install, usage, plugin reference, and scripts.
+- [CONTRIBUTING.md](CONTRIBUTING.md): how plugins are structured and versioned.
+- `scripts/`: [install-plugins.sh](docs/scripts.md#install-pluginssh), [validate-all.sh](docs/scripts.md#validate-allsh), [new-plugin.sh](docs/scripts.md#new-pluginsh).
