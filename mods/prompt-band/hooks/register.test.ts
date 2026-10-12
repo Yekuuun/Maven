@@ -52,3 +52,36 @@ test('lists a running agent with its label and status', async ($, on) => {
 
   expect(writes.agents).toEqual([{ id: 'a1', label: 'refactor the parser', status: 'running' }])
 })
+
+test('keeps active agents first and caps the band at three rows', async ($, on) => {
+  stubEngine(on, [
+    { id: 'a1', type: 'subagent', description: 'done task', status: 'completed' },
+    { id: 'a2', type: 'subagent', description: 'parse the config', status: 'running' },
+    { id: 'a3', type: 'subagent', description: 'write the docs', status: 'waiting' },
+    { id: 'a4', type: 'subagent', description: 'fix the lint', status: 'pending' },
+  ])
+
+  const writes: Record<string, unknown> = {}
+  on('state.set', ($, e, next) => {
+    writes[e.key] = e.value
+    return next(e)
+  })
+
+  await $.session.start({ cwd: '.', surface: 'terminal', isInteractive: true })
+
+  expect((writes.agents as { id: string }[]).map(r => r.id)).toEqual(['a2', 'a3', 'a4'])
+})
+
+test('truncates long agent labels to the label width', async ($, on) => {
+  stubEngine(on, [{ id: 'a1', type: 'subagent', description: 'refactor the parser module now', status: 'running' }])
+
+  const writes: Record<string, unknown> = {}
+  on('state.set', ($, e, next) => {
+    writes[e.key] = e.value
+    return next(e)
+  })
+
+  await $.session.start({ cwd: '.', surface: 'terminal', isInteractive: true })
+
+  expect((writes.agents as { label: string }[])[0].label).toBe('refactor the parser modu')
+})
