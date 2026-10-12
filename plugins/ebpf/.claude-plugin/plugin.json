@@ -1,0 +1,7 @@
+{
+  "name": "ebpf",
+  "version": "0.1.0",
+  "description": "eBPF / libbpf review and verifier help. Depends on c.",
+  "author": { "name": "Yekuuun" },
+  "dependencies": ["c"]
+}
