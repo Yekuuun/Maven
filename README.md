@@ -37,6 +37,8 @@ Then install what a project needs:
 - **Language plugins** (`csharp`, `c`) hold rules that hold for any project in that language.
 - **Domain plugins** (`ebpf`) build on a language and only add what is specific to the
   domain. A C memory rule lives in `c`, never copied into `ebpf`.
+- **Mods** live in `mods/`, apart from `plugins/`. They change how Claude Code itself behaves,
+  so their interface code stays separate from the business logic in `plugins/`.
 
 ## Documentation
 

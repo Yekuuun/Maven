@@ -57,6 +57,17 @@ eBPF with libbpf and CO-RE. Requires `c`, which is installed automatically.
 | --- | --- | --- |
 | Skill | `ebpf-review` | Verifier-friendly code, map and ring buffer patterns, CO-RE portability, attach lifecycle, and mapping verifier rejections to their rule. |
 
+## Mods
+
+Mods change Claude Code's interface or behaviour. They live in `mods/`, apart from `plugins/`, and install the same way.
+See [mods/README.md](../mods/README.md).
+
+| Mod | What it shows | Surfaces |
+| --- | --- | --- |
+| `prompt-band` | The git branch and the context window above the prompt, with a bar per running or finished agent. Red while an agent works, green when it completes. | terminal, desktop |
+
+Install with `/plugin install prompt-band --marketplace Yekuuun/Maven`.
+
 ## Adding a plugin
 
 See [Contributing](../CONTRIBUTING.md), or use [`scripts/new-plugin.sh`](scripts.md#new-pluginsh) to scaffold one.
