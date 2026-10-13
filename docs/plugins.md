@@ -64,7 +64,7 @@ See [mods/README.md](../mods/README.md).
 
 | Mod | What it shows | Surfaces |
 | --- | --- | --- |
-| `prompt-band` | The git branch and the context window above the prompt, with a bar per running or finished agent. Red while an agent works, green when it completes. | terminal, desktop |
+| `prompt-band` | One greyed line across the whole width above the prompt: location, git branch (yellow on `main`/`master`), context window and usage limits (5h / 7d, or cost off a subscription). A side pane, **The Fellowship**, where each running agent walks with a companion from The Lord of the Rings, its state and an animated bar. `/fellowship` reopens it. | terminal, desktop |
 
 Install with `/plugin install prompt-band --marketplace Yekuuun/Maven`.
 

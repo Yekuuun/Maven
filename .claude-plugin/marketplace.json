@@ -9,6 +9,6 @@
     { "name": "csharp", "source": "./plugins/csharp", "description": "Modern C# standards, concurrency patterns, .NET review." },
     { "name": "c", "source": "./plugins/c", "description": "C memory-safety review." },
     { "name": "ebpf", "source": "./plugins/ebpf", "description": "eBPF / libbpf review and verifier help. Depends on c." },
-    { "name": "prompt-band", "source": "./mods/prompt-band", "description": "Shows the git branch, the context window and running agents above the prompt." }
+    { "name": "prompt-band", "source": "./mods/prompt-band", "description": "One greyed line above the prompt with the location, the git branch, the context window and the usage limits, and a side pane where each running agent walks with a Fellowship companion." }
   ]
 }

@@ -66,5 +66,5 @@ jq --arg name "$name" --arg desc "$description" \
 mv "$tmp" "$MARKETPLACE_FILE"
 
 echo "Created plugins/$name and registered it in .claude-plugin/marketplace.json."
-echo "Next: add skills under plugins/$name/skills/<skill>/SKILL.md, then run scripts/validate-all.sh."
+echo "Next: add skills under plugins/$name/skills/<skill>/SKILL.md, then run python scripts/validate.py."
 echo "Also add it to the plugin table in README.md."

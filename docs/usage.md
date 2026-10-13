@@ -75,5 +75,6 @@ apply those edits through a normal commit.
 
 ## Changing Maven itself
 
-Edit a skill or agent in `plugins/<name>/`, run [`scripts/validate-all.sh`](scripts.md#validate-allsh),
-then commit. See [Contributing](../CONTRIBUTING.md) for naming and versioning rules.
+Edit a skill or agent in `plugins/<name>/`, try it with [`scripts/try.py`](scripts.md#trypy), run
+[`scripts/validate.py`](scripts.md#validatepy), then open a pull request. The version is bumped
+after the merge. See [Contributing](../CONTRIBUTING.md).

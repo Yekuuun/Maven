@@ -1,0 +1,2 @@
+# Keep LF everywhere: a CRLF checkout can break YAML frontmatter parsing.
+* text=auto eol=lf
