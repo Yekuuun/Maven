@@ -13,7 +13,7 @@ plugins/<name>/                   # skills, agents and commands for a stack or w
 mods/<name>/                      # mods: code that changes Claude Code's own interface
   .claude-plugin/plugin.json
   hooks/hooks.json
-  hooks/register.ts
+  hooks/register.tsx
   hooks/register.test.ts
 ```
 
@@ -38,7 +38,7 @@ A plugin with no content does not belong in the marketplace yet.
 - One concern per skill. If a skill needs two unrelated checklists, split it.
 - Cross-references use the exact `name:` of the target, and the plugin prefix when the
   target lives in another plugin (`core:dev-plan`).
-- Relative links inside a skill point to files that exist. Check them before committing.
+- Relative links inside a skill point to files that exist. `scripts/validate.py` checks them.
 
 ## Rules of placement
 
@@ -49,16 +49,45 @@ A plugin with no content does not belong in the marketplace yet.
 - Material tied to a specific employer, client, or internal system does not go in this
   repository. Keep it in a separate private repository.
 
+## Testing a change
+
+Run [`try.py`](docs/scripts.md#trypy) from the repository where the plugin is meant to work:
+
+```bash
+python ~/code/Maven/scripts/try.py feature/my-branch --plugins csharp
+```
+
+The plugins of the branch replace the installed ones for that session only. Nothing to uninstall,
+nothing to reinstall. Pass the path of your clone instead of a branch to load uncommitted work,
+and `/reload-plugins` after each edit.
+
 ## Versioning
 
-- Semver per plugin. Bump the patch for content fixes, minor for new skills or agents, major
-  for renames or removals.
-- Bump the version in `plugin.json` in the same commit as the change.
+Semver per plugin and per mod, in `plugin.json` only, never in the catalog.
+
+**Do not bump in a pull request.** After each push to `main`, the
+[release workflow](.github/workflows/release.yml) bumps every plugin the push changed, at the level
+its commits call for, and pushes a `CHORE(release): bump ...` commit:
+
+- `FIX`, `DOCS`, `REFACTOR` and other types: patch
+- `FEAT`, `NEW`, `UPDATE`: minor
+- `!` after the type, or a `BREAKING CHANGE` line: major (renames, removals)
+
+So the commit type is the version decision: pick it with that in mind. With a squash merge, the
+pull request title becomes the only commit and decides for every plugin it touches; a merge commit
+or a rebase keeps each commit's level. A bump made by hand in the
+pull request (`python scripts/bump.py csharp --level major`) is kept as is.
 
 ## Validation
 
 ```bash
-claude plugin validate .
+python scripts/validate.py
 ```
 
-Run it before committing.
+```bash
+claude plugin validate . --strict
+```
+
+`validate.py` checks the catalog against the manifests, the skills and the relative links. The
+[checks workflow](.github/workflows/checks.yml) runs both on every pull request, plus
+`claude plugin test` on each mod. Run them locally before pushing to save a round trip.
