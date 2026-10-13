@@ -1,7 +1,7 @@
 {
   "name": "prompt-band",
   "version": "0.2.0",
-  "description": "Shows the git branch, the context window and running agents above the prompt.",
+  "description": "One greyed line above the prompt with the location, the git branch, the context window and the usage limits, and a side pane where each running agent walks with a Fellowship companion.",
   "author": { "name": "Yekuuun" },
   "types": "./types/index.d.ts"
 }
