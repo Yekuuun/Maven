@@ -47,6 +47,7 @@ C memory safety and security.
 
 | Component | Name | Purpose |
 | --- | --- | --- |
+| Skill | `c-syntax` | House C style: file headers and guards, naming and prefixes, indentation, braces, banners, doc comments, struct layout and return conventions. Linux kernel style as fallback. |
 | Skill | `c-memory-safety-review` | Checklist for bounds, lifetimes, allocation, integer overflow, undefined behaviour, error paths, and input handling. Includes the sanitizer, valgrind and gdb workflow. |
 
 ## ebpf
@@ -56,6 +57,8 @@ eBPF with libbpf and CO-RE. Requires `c`, which is installed automatically.
 | Component | Name | Purpose |
 | --- | --- | --- |
 | Skill | `ebpf-review` | Verifier-friendly code, map and ring buffer patterns, CO-RE portability, attach lifecycle, and mapping verifier rejections to their rule. |
+| Skill | `map-expert` | Choosing and using eBPF map types: per-CPU vs shared, LRU, arrays, ring buffer vs perf, storage maps, redirect maps, flags, pinning and map APIs. Reference catalogue in `references/map-types.md`. |
+| Skill | `verifier-loops` | Loops and buffer bounds the verifier accepts: `for` vs `bpf_loop()`, nested loops, bounds lost across callbacks, power-of-two masks, and reading complexity-limit errors. |
 
 ## Mods
 
