@@ -56,6 +56,8 @@ eBPF with libbpf and CO-RE. Requires `c`, which is installed automatically.
 | Component | Name | Purpose |
 | --- | --- | --- |
 | Skill | `ebpf-review` | Verifier-friendly code, map and ring buffer patterns, CO-RE portability, attach lifecycle, and mapping verifier rejections to their rule. |
+| Skill | `map-expert` | Choosing and using eBPF map types: per-CPU vs shared, LRU, arrays, ring buffer vs perf, storage maps, redirect maps, flags, pinning and map APIs. Reference catalogue in `references/map-types.md`. |
+| Skill | `verifier-loops` | Loops and buffer bounds the verifier accepts: `for` vs `bpf_loop()`, nested loops, bounds lost across callbacks, power-of-two masks, and reading complexity-limit errors. |
 
 ## Mods
 
