@@ -47,6 +47,7 @@ C memory safety and security.
 
 | Component | Name | Purpose |
 | --- | --- | --- |
+| Skill | `c-syntax` | House C style: file headers and guards, naming and prefixes, indentation, braces, banners, doc comments, struct layout and return conventions. Linux kernel style as fallback. |
 | Skill | `c-memory-safety-review` | Checklist for bounds, lifetimes, allocation, integer overflow, undefined behaviour, error paths, and input handling. Includes the sanitizer, valgrind and gdb workflow. |
 
 ## ebpf

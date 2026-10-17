@@ -9,7 +9,7 @@ project installs only the context it needs.
 | --- | --- | --- |
 | `core` | git conventions, development plans, plan review, dispatch, skill tooling | none |
 | `csharp` | modern C# standards, concurrency patterns, .NET reviewer and performance agents | none |
-| `c` | C memory-safety review | none |
+| `c` | C syntax conventions and memory-safety review | none |
 | `ebpf` | eBPF / libbpf review and verifier-error help | `c` |
 
 ## Install
