@@ -1,0 +1,65 @@
+# Bumps the version of every plugin and mod changed by a push to main.
+#
+# The level comes from the conventional commits of the push (scripts/bump.py):
+# FIX -> patch, FEAT/NEW/UPDATE -> minor, '!' or BREAKING CHANGE -> major.
+# A bump made by hand in the pull request is kept. The version commit is pushed
+# with the GITHUB_TOKEN, whose pushes never trigger a workflow: no loop.
+name: release
+
+on:
+  push:
+    branches: [main]
+    paths: ['plugins/**', 'mods/**']
+
+permissions:
+  contents: write
+
+# One release at a time: two quick merges are bumped one after the other.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Bump the changed plugins
+        env:
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.event.after }}
+        run: |
+          set -euo pipefail
+          if [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+            echo "New branch, nothing to compare against."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # main may move while this job runs: start again from its tip on each
+          # attempt, bump.py skips what is already bumped.
+          for attempt in 1 2 3; do
+            git fetch --quiet origin main
+            git checkout --quiet --force -B main origin/main
+            out="$(python scripts/bump.py --since "$BEFORE" --until "$AFTER")"
+            echo "$out"
+            bumped="$(echo "$out" | sed -n 's/^bumped: //p')"
+            if [ -z "$bumped" ]; then
+              echo "Nothing to bump."
+              exit 0
+            fi
+            git commit --quiet -am "CHORE(release): bump $bumped"
+            if git push origin main; then
+              exit 0
+            fi
+            echo "main moved during the run, retrying ($attempt/3)"
+          done
+          exit 1

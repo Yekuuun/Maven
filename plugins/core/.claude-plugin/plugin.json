@@ -1,6 +1,6 @@
 {
   "name": "core",
-  "version": "0.1.0",
-  "description": "Stack-agnostic workflow: git conventions and plan review.",
+  "version": "0.1.1",
+  "description": "Stack-agnostic workflow: git conventions, development plans, plan review.",
   "author": { "name": "Yekuuun" }
 }

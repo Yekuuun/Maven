@@ -50,17 +50,16 @@ claude plugin install csharp@maven --scope user
 For a single project, `project` scope is usually the right choice. Commit the resulting
 settings file so the setup travels with the repository.
 
-### Using the helper script
+### In one command
 
-[`scripts/install-plugins.sh`](scripts.md#install-pluginssh) wraps the commands above. It also adds the
-marketplace on first use.
+`--marketplace` adds the marketplace on first use, so a plugin installs in a single command:
 
 ```bash
-scripts/install-plugins.sh core csharp                  # user scope, from GitHub
-scripts/install-plugins.sh -s project ebpf              # project scope
-scripts/install-plugins.sh -m ~/code/Maven core         # from a local clone
-scripts/install-plugins.sh -n ebpf                      # dry run: print commands only
+claude plugin install core@maven --marketplace Yekuuun/Maven --scope user
 ```
+
+To try a branch before it is merged, without touching what is installed, see
+[`try.py`](scripts.md#trypy).
 
 ## 3. Confirm
 

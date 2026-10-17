@@ -1,6 +1,6 @@
 {
   "name": "csharp",
-  "version": "0.1.0",
-  "description": "C# / .NET conventions and review.",
+  "version": "0.1.1",
+  "description": "Modern C# standards, concurrency patterns, .NET review.",
   "author": { "name": "Yekuuun" }
 }

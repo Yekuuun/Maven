@@ -22,8 +22,8 @@ claude plugin install core@maven --scope user
 claude plugin install csharp@maven --scope user
 ```
 
-Or use the helper script, which does the same and can target a project scope:
+`--marketplace` does step 1 on the fly:
 
 ```bash
-scripts/install-plugins.sh core csharp
+claude plugin install core@maven --marketplace Yekuuun/Maven --scope user
 ```

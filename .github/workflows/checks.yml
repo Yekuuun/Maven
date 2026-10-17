@@ -1,0 +1,37 @@
+# Checks every pull request to main: catalog and manifests, skills, links,
+# Claude Code validation, and the mods' tests.
+name: checks
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Catalog, manifests, skills and links
+        run: python scripts/validate.py
+
+      - name: Install Claude Code
+        run: |
+          curl -fsSL https://claude.ai/install.sh | bash
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Claude Code validation
+        run: |
+          claude plugin validate . --strict
+          for dir in plugins/*/ mods/*/; do claude plugin validate "$dir" --strict; done
+
+      - name: Mod tests
+        run: for dir in mods/*/; do claude plugin test "$dir"; done

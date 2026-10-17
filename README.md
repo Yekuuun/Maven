@@ -43,5 +43,5 @@ Then install what a project needs:
 ## Documentation
 
 - [docs/](docs/README.md): install, usage, plugin reference, and scripts.
-- [CONTRIBUTING.md](CONTRIBUTING.md): how plugins are structured and versioned.
-- `scripts/`: [install-plugins.sh](docs/scripts.md#install-pluginssh), [validate-all.sh](docs/scripts.md#validate-allsh), [new-plugin.sh](docs/scripts.md#new-pluginsh).
+- [CONTRIBUTING.md](CONTRIBUTING.md): how plugins are structured, tested and versioned.
+- `scripts/`: [try.py](docs/scripts.md#trypy), [validate.py](docs/scripts.md#validatepy), [bump.py](docs/scripts.md#bumppy), [new-plugin.sh](docs/scripts.md#new-pluginsh).
